@@ -1,0 +1,174 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Genie Experience theme — used across the full product */
+  --background: #0b0e14;
+  --foreground: #f1f5f9;
+  --card: #121821;
+  --card-foreground: #f1f5f9;
+  --popover: #121821;
+  --popover-foreground: #f1f5f9;
+  --primary: #00e5ff;
+  --primary-foreground: #0b0e14;
+  --secondary: #1a2332;
+  --secondary-foreground: #e2e8f0;
+  --muted: #161d28;
+  --muted-foreground: #94a3b8;
+  --accent: #162033;
+  --accent-foreground: #e2e8f0;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --success: #34d399;
+  --success-foreground: #0b0e14;
+  --warning: #fbbf24;
+  --warning-foreground: #0b0e14;
+  --risk: #f87171;
+  --navy: #f8fafc;
+  --border: #243044;
+  --input: #243044;
+  --ring: #00e5ff;
+  --radius: 0.75rem;
+  --sidebar: #0d1118;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary: #00e5ff;
+  --sidebar-primary-foreground: #0b0e14;
+  --sidebar-accent: #161d28;
+  --sidebar-accent-foreground: #f1f5f9;
+  --sidebar-border: #1e293b;
+  --sidebar-ring: #00e5ff;
+  --experience-cyan: #00e5ff;
+  --experience-blue: #007bff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-risk: var(--risk);
+  --color-navy: var(--navy);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: var(--font-geist-sans), "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    background-image:
+      radial-gradient(ellipse 80% 55% at 15% -10%, rgba(0, 123, 255, 0.28), transparent 55%),
+      radial-gradient(ellipse 60% 45% at 90% 10%, rgba(0, 229, 255, 0.12), transparent 50%),
+      radial-gradient(ellipse 50% 40% at 50% 100%, rgba(0, 80, 160, 0.18), transparent 55%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: rgba(0, 229, 255, 0.28);
+    color: #fff;
+  }
+}
+
+/* GenieKreator Experience shell (fullscreen flows) */
+.experience-theme {
+  --experience-bg: #0b0e14;
+  --experience-cyan: #00e5ff;
+  --experience-blue: #007bff;
+  background-color: var(--experience-bg);
+  background-image:
+    radial-gradient(ellipse 80% 55% at 15% -10%, rgba(0, 123, 255, 0.28), transparent 55%),
+    radial-gradient(ellipse 60% 45% at 90% 10%, rgba(0, 229, 255, 0.12), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 50% 100%, rgba(0, 80, 160, 0.18), transparent 55%);
+}
+
+.experience-stars {
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1px 1px at 28% 62%, rgba(255, 255, 255, 0.22), transparent),
+    radial-gradient(1.5px 1.5px at 48% 28%, rgba(0, 229, 255, 0.45), transparent),
+    radial-gradient(1px 1px at 72% 14%, rgba(255, 255, 255, 0.28), transparent),
+    radial-gradient(1px 1px at 86% 48%, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(1.5px 1.5px at 64% 78%, rgba(0, 229, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 38% 88%, rgba(255, 255, 255, 0.18), transparent);
+  opacity: 0.9;
+  animation: experience-stars-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes experience-stars-drift {
+  from {
+    opacity: 0.75;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+/* Soft interactive lift — used on cards / choice tiles */
+@media (hover: hover) and (pointer: fine) {
+  .motion-lift {
+    transition:
+      transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 220ms ease,
+      box-shadow 280ms ease;
+  }
+  .motion-lift:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .experience-stars {
+    animation: none;
+  }
+
+  .motion-lift,
+  .motion-lift:hover {
+    transition: none;
+    transform: none;
+  }
+
+  .animate-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
