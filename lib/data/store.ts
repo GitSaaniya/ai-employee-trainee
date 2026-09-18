@@ -812,6 +812,15 @@ export function completeAssessmentSession(
   assignment.status = "completed";
   assignment.completedAt = now;
 
+  const profile = data.employeeProfiles.find((e) => e.id === session.employeeId);
+  if (profile) {
+    profile.previousScore = profile.readinessScore;
+    profile.readinessScore = Math.round(result.overallScore);
+    profile.riskLevel = riskFromReadiness(profile.readinessScore, false);
+    profile.lastActivityAt = now;
+    profile.updatedAt = now;
+  }
+
   setData(data);
   return result;
 }

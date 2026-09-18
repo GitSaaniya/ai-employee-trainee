@@ -60,11 +60,13 @@ export async function migrateLegacyBlobIfNeeded(): Promise<boolean> {
   const usersCount = await db.collection(COLLECTIONS.users).countDocuments();
   if (usersCount > 0) return false;
 
-  const legacy = await db.collection("app_state").findOne<{ data?: AppData }>({ _id: LEGACY_BLOB_ID });
+  type LegacyBlob = { _id: string; data?: AppData; migratedAt?: string; note?: string };
+  const appState = db.collection<LegacyBlob>("app_state");
+  const legacy = await appState.findOne({ _id: LEGACY_BLOB_ID });
   if (!legacy?.data) return false;
 
   await saveAppDataToMongo(legacy.data);
-  await db.collection("app_state").updateOne(
+  await appState.updateOne(
     { _id: LEGACY_BLOB_ID },
     {
       $set: {
@@ -170,13 +172,13 @@ export async function saveAppDataToMongo(data: AppData): Promise<void> {
   const db = await getDb();
   await ensureIndexes(db);
 
-  await db.collection(COLLECTIONS.organisations).replaceOne(
+  await db.collection<EntityDoc>(COLLECTIONS.organisations).replaceOne(
     { _id: data.organisation.id },
     toDoc(data.organisation),
     { upsert: true }
   );
 
-  await db.collection(COLLECTIONS.workspaceSettings).replaceOne(
+  await db.collection<EntityDoc>(COLLECTIONS.workspaceSettings).replaceOne(
     { _id: WORKSPACE_SETTINGS_ID },
     {
       _id: WORKSPACE_SETTINGS_ID,
