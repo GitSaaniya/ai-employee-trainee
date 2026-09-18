@@ -108,6 +108,12 @@ export async function POST(request: Request) {
           audienceMetadata: a.audienceMetadata,
           durationMinutes: a.durationMinutes ?? 5,
           existingPersona: a.persona,
+          roleContract: {
+            employeePerforms: a.roleLabel || "the assessed job in the scenario",
+            aiIs: "interviewer/assessor only — never performs the assessed job",
+            example:
+              "Shampoo mall scenario: employee = shopkeeper/sales associate; AI asks how they approach customers, discover needs, and sell — AI does not act as the shopkeeper.",
+          },
         }),
         temperature: 0.4,
         schemaName: "assessment_pack",

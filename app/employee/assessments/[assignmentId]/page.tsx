@@ -125,9 +125,13 @@ export default function AssessmentIntroPage() {
             Your <span className="text-[#00E5FF]">AI Assessment</span> brief
           </h2>
           <p className="mb-4 text-sm leading-relaxed text-white/55">{assessment.goal}</p>
+          <p className="mb-4 rounded-lg border border-[#00E5FF]/20 bg-[#00E5FF]/5 px-3 py-2 text-xs leading-relaxed text-white/70">
+            You will play <span className="font-medium text-white">{assessment.roleLabel || "the assessed role"}</span> in
+            this scenario. The AI interviewer assesses how you respond — it will not perform that role for you.
+          </p>
           <dl className="space-y-3 text-sm">
             <div>
-              <dt className="text-[10px] tracking-wider text-white/35 uppercase">Role</dt>
+              <dt className="text-[10px] tracking-wider text-white/35 uppercase">Your role</dt>
               <dd className="text-white/80">{assessment.roleLabel}</dd>
             </div>
             <div>

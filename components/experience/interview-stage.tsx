@@ -486,6 +486,9 @@ export function InterviewStage({
             employeeName,
             topic,
             goal: assessment.goal,
+            roleLabel: assessment.roleLabel,
+            scenario: assessment.scenario,
+            learnerPersona: assessment.learnerPersona,
             adaptiveEnabled: assessment.adaptiveEnabled && !awaitingFollowUpRef.current,
             followUpsUsed: followUpsRef.current,
             maxFollowUps: 2,
@@ -544,6 +547,9 @@ export function InterviewStage({
       agentName,
       assessment.adaptiveEnabled,
       assessment.goal,
+      assessment.learnerPersona,
+      assessment.roleLabel,
+      assessment.scenario,
       employeeName,
       enterListening,
       finishInterview,
@@ -694,7 +700,10 @@ export function InterviewStage({
     }, 1000);
 
     const q0 = questions[0];
-    const opener = `Hi ${employeeName}, I'm ${agentName}. This is your assessment video call on ${topic}. ${q0.text}`;
+    const roleBit = assessment.roleLabel?.trim()
+      ? ` You'll answer as the ${assessment.roleLabel.trim()} in this scenario — I'll assess how you handle it.`
+      : " You'll respond in the scenario role — I'll assess how you handle it.";
+    const opener = `Hi ${employeeName}, I'm ${agentName}.${roleBit} ${q0.text}`;
     await speakAi(opener);
   }
 

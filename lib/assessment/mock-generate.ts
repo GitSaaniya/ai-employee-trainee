@@ -9,33 +9,33 @@ export function mockGenerateAssessmentContent(assessment: Assessment): {
 } {
   const product = assessment.audienceMetadata.productFocus || "the product";
   const location = assessment.audienceMetadata.locationType || "the floor";
-  const role = assessment.roleLabel || "the learner";
+  const role = assessment.roleLabel || "sales associate";
 
   const coreQuestions: AssessmentCoreQuestion[] = [
     {
       id: uid("aq"),
       order: 1,
-      text: `Walk me through how you would open a conversation with a busy shopper about ${product} at ${location}.`,
+      text: `You are the ${role} at ${location}. A shopper pauses near ${product}. How do you open the conversation?`,
     },
     {
       id: uid("aq"),
       order: 2,
-      text: "What discovery questions would you ask to understand the shopper's needs before recommending anything?",
+      text: `Still as the ${role}, what discovery questions do you ask to understand this shopper's needs before recommending anything?`,
     },
     {
       id: uid("aq"),
       order: 3,
-      text: `The shopper says, "I'm in a hurry and already have a brand I like." How do you handle that objection for ${product}?`,
+      text: `The shopper says, "I'm in a hurry and already have a brand I like." As the ${role}, how do you handle that for ${product}?`,
     },
     {
       id: uid("aq"),
       order: 4,
-      text: `How would you position the benefits of ${product} in under 30 seconds without sounding scripted?`,
+      text: `In your own words as the ${role}, how would you pitch the benefits of ${product} in under 30 seconds?`,
     },
     {
       id: uid("aq"),
       order: 5,
-      text: "How do you close the interaction and set a clear next step if they are still undecided?",
+      text: `As the ${role}, how do you close the interaction and set a clear next step if they are still undecided?`,
     },
   ];
 
@@ -44,7 +44,7 @@ export function mockGenerateAssessmentContent(assessment: Assessment): {
       id: uid("ars"),
       name: "Objection handling",
       weight: 25,
-      descriptors: "Acknowledges concerns, reframes value, stays calm under pushback.",
+      descriptors: "Acknowledges concerns, reframes value, stays calm under pushback — as the employee in role.",
     },
     {
       id: uid("ars"),
@@ -56,7 +56,7 @@ export function mockGenerateAssessmentContent(assessment: Assessment): {
       id: uid("ars"),
       name: "Product knowledge",
       weight: 25,
-      descriptors: `Explains ${product} benefits clearly and accurately for ${role}.`,
+      descriptors: `Explains ${product} benefits clearly and accurately while acting as ${role}.`,
     },
     {
       id: uid("ars"),
@@ -68,10 +68,12 @@ export function mockGenerateAssessmentContent(assessment: Assessment): {
 
   const persona = {
     name: assessment.persona.name || "Maya",
-    style: assessment.persona.style || "Warm, commercially sharp mall shopper who is time-pressed",
+    style:
+      assessment.persona.style ||
+      "Warm, probing AI interviewer who keeps the employee in the assessed role and never models the job for them",
     voiceNotes:
       assessment.persona.voiceNotes ||
-      "Conversational English, brief turns, challenges vague pitches, rewards clear benefit language.",
+      "Conversational English, brief turns, may quote a short customer line as a prompt, then waits for the employee to respond in role.",
   };
 
   return { coreQuestions, rubricSkills, persona };

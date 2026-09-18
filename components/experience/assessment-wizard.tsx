@@ -259,8 +259,11 @@ export function AssessmentAuthoringWizard({
                     className={cn("mt-2", fieldClass)}
                     value={assessment.roleLabel}
                     onChange={(e) => patch({ roleLabel: e.target.value })}
-                    placeholder="Sales Associate"
+                    placeholder="Sales Associate / Shopkeeper"
                   />
+                  <p className="mt-1 text-xs text-white/35">
+                    Job the employee performs in the scenario. The AI assesses them — it does not play this role.
+                  </p>
                 </div>
                 <div>
                   <Label className={labelClass}>Linked role</Label>
@@ -410,7 +413,11 @@ export function AssessmentAuthoringWizard({
                       className={cn("mt-2 min-h-[120px]", fieldClass)}
                       value={assessment.learnerPersona}
                       onChange={(e) => patch({ learnerPersona: e.target.value })}
+                      placeholder="FMCG sales associate on a mall floor who must approach shoppers and sell shampoo"
                     />
+                    <p className="mt-1 text-xs text-white/35">
+                      Describe the employee&apos;s job in the scenario. Assessment questions will put them in this role.
+                    </p>
                   </div>
                 </>
               )}
@@ -420,7 +427,8 @@ export function AssessmentAuthoringWizard({
                     Describe your AI Persona
                   </h1>
                   <p className="text-sm text-white/50">
-                    Configure how your AI interviewer behaves, sounds, and interacts.
+                    Configure the AI interviewer/assessor. Keep this as an assessor persona — not the shopkeeper or
+                    job being assessed. The employee performs that role; the AI asks how they would handle it.
                   </p>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
@@ -461,12 +469,15 @@ export function AssessmentAuthoringWizard({
                   <h1 className="font-[family-name:var(--font-experience-display)] text-3xl text-white">
                     Explain the Scenario
                   </h1>
-                  <p className="text-sm text-white/50">Set the situation the learner will practice.</p>
+                  <p className="text-sm text-white/50">
+                    Set the situation the employee must navigate in the assessed role (e.g. sell shampoo as a
+                    shopkeeper). The AI interviews them about it — it does not act as the shopkeeper.
+                  </p>
                   <Textarea
                     className={cn("mt-2 min-h-[160px]", fieldClass)}
                     value={assessment.scenario}
                     onChange={(e) => patch({ scenario: e.target.value })}
-                    placeholder="Busy mall aisle, time-pressed shopper, new shampoo SKU…"
+                    placeholder="Busy mall aisle, time-pressed shopper, new shampoo SKU — employee is the shopkeeper who must approach and sell…"
                   />
                 </>
               )}
