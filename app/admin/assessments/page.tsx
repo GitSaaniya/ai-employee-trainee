@@ -61,7 +61,7 @@ export default function AssessmentsListPage() {
             asChild
             className="border-0 bg-gradient-to-r from-[#007BFF] to-[#00E5FF] text-white"
           >
-            <Link href="/admin/assessments/new">
+            <Link href="/admin/experience">
               <Plus className="h-4 w-4" /> New assessment
             </Link>
           </Button>
