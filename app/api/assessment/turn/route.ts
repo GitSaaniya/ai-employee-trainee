@@ -99,7 +99,7 @@ export async function POST(request: Request) {
           scenario: body.scenario || body.topic,
           topic: body.topic,
           reminder:
-            "Employee performs the assessed role. You only assess — never demonstrate or speak as that role.",
+            "CRITICAL: Situational judgment only. Employee handles scenarios as the assessed role. Never immersive customer chat. Never play the assessed job. Rewrite any off-path core question before asking it.",
           lastUserAnswer: body.lastUserAnswer,
           currentCoreQuestion: currentCore,
           nextCoreQuestionIfNeeded: nextCore,

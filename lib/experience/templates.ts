@@ -33,7 +33,8 @@ export const EXPERIENCE_TEMPLATES: ExperienceTemplate[] = [
     scenario:
       "A busy weekend afternoon in a mall beauty aisle. Shoppers are time-pressed. The associate must pitch a new shampoo SKU with a clear benefit story.",
     personaName: "Maya",
-    personaStyle: "Warm but skeptical mall shopper who has limited time",
+    personaStyle:
+      "Warm, probing AI interviewer who presents mall-floor situations and assesses how the sales associate would handle them",
     productFocus: "shampoo",
     locationType: "mall floor",
     region: "APAC",
@@ -50,7 +51,8 @@ export const EXPERIENCE_TEMPLATES: ExperienceTemplate[] = [
     learnerPersona: "Account executives who need sharper discovery and objection handling on live calls.",
     scenario: "A prospect joins a 10-minute discovery call with budget pressure and a competing vendor in mind.",
     personaName: "Alex",
-    personaStyle: "Busy procurement-minded buyer",
+    personaStyle:
+      "Direct AI interviewer who presents sales-call situations and scores judgment and communication",
     productFocus: "B2B solution",
     locationType: "virtual call",
     region: "Global",
@@ -66,7 +68,8 @@ export const EXPERIENCE_TEMPLATES: ExperienceTemplate[] = [
     learnerPersona: "Emerging managers negotiating scope, salary, or vendor terms.",
     scenario: "A counterpart pushes hard on price while you protect value and relationship.",
     personaName: "Sam",
-    personaStyle: "Tough but fair negotiator",
+    personaStyle:
+      "Neutral AI interviewer who presents negotiation scenarios and assesses approach and composure",
     productFocus: "contract terms",
     locationType: "meeting room",
     region: "Global",
@@ -82,7 +85,8 @@ export const EXPERIENCE_TEMPLATES: ExperienceTemplate[] = [
     learnerPersona: "People managers who avoid conflict and need structured feedback skills.",
     scenario: "A direct report is underperforming on a visible deliverable and the conversation is overdue.",
     personaName: "Jordan",
-    personaStyle: "Defensive but coachable report",
+    personaStyle:
+      "Calm AI interviewer who presents difficult-conversation situations and assesses empathy and clarity",
     productFocus: "performance feedback",
     locationType: "1:1",
     region: "Global",
@@ -98,7 +102,8 @@ export const EXPERIENCE_TEMPLATES: ExperienceTemplate[] = [
     learnerPersona: "Frontline agents handling escalated complaints.",
     scenario: "A customer arrives angry about a failed delivery and wants an immediate fix.",
     personaName: "Riley",
-    personaStyle: "Upset customer seeking accountability",
+    personaStyle:
+      "Steady AI interviewer who presents complaint scenarios and assesses de-escalation and resolution",
     productFocus: "service recovery",
     locationType: "service desk",
     region: "Global",
@@ -114,7 +119,8 @@ export const EXPERIENCE_TEMPLATES: ExperienceTemplate[] = [
     learnerPersona: "Candidates preparing for behavioral interviews.",
     scenario: "A hiring manager runs five structured behavioral questions with follow-ups.",
     personaName: "Priya",
-    personaStyle: "Experienced hiring manager",
+    personaStyle:
+      "Structured AI interviewer who asks behavioral questions and probes for clear evidence",
     productFocus: "career narrative",
     locationType: "interview",
     region: "Global",
@@ -146,7 +152,8 @@ export function applyTemplateToAssessment(
     persona: {
       name: template.personaName,
       style: template.personaStyle,
-      voiceNotes: "Conversational English, short turns, challenges vague answers.",
+      voiceNotes:
+        "Conversational English, short turns. CRITICAL: assess situational judgment — never immersive customer roleplay.",
     },
   };
 }

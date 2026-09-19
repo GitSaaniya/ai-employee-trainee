@@ -36,7 +36,7 @@ export const audioConfig = {
 
   maxUtteranceMs: 45000,
   silenceFallbackMs: 3500,
-  postTtsSettleMs: 400,
+  postTtsSettleMs: 250,
   minSttConfidence: Number(process.env.NEXT_PUBLIC_MIN_STT_CONFIDENCE ?? 0.15),
   minTranscriptWords: 1,
   sessionTimeBoxMinutes: 5,

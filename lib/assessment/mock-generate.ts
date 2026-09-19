@@ -15,27 +15,27 @@ export function mockGenerateAssessmentContent(assessment: Assessment): {
     {
       id: uid("aq"),
       order: 1,
-      text: `You are the ${role} at ${location}. A shopper pauses near ${product}. How do you open the conversation?`,
+      text: `A shopper pauses near ${product} at ${location}. As the ${role}, how would you open the conversation?`,
     },
     {
       id: uid("aq"),
       order: 2,
-      text: `Still as the ${role}, what discovery questions do you ask to understand this shopper's needs before recommending anything?`,
+      text: `Before recommending ${product}, what discovery questions would you ask as the ${role} to understand the shopper's needs?`,
     },
     {
       id: uid("aq"),
       order: 3,
-      text: `The shopper says, "I'm in a hurry and already have a brand I like." As the ${role}, how do you handle that for ${product}?`,
+      text: `A shopper says, "I'm in a hurry and already have a brand I like." As the ${role}, how would you handle that for ${product}?`,
     },
     {
       id: uid("aq"),
       order: 4,
-      text: `In your own words as the ${role}, how would you pitch the benefits of ${product} in under 30 seconds?`,
+      text: `As the ${role}, how would you explain the main benefits of ${product} in under 30 seconds?`,
     },
     {
       id: uid("aq"),
       order: 5,
-      text: `As the ${role}, how do you close the interaction and set a clear next step if they are still undecided?`,
+      text: `If the shopper is still undecided, how would you close or set a clear next step as the ${role}?`,
     },
   ];
 
@@ -44,7 +44,7 @@ export function mockGenerateAssessmentContent(assessment: Assessment): {
       id: uid("ars"),
       name: "Objection handling",
       weight: 25,
-      descriptors: "Acknowledges concerns, reframes value, stays calm under pushback — as the employee in role.",
+      descriptors: "Acknowledges concerns, reframes value, stays calm under pushback.",
     },
     {
       id: uid("ars"),
@@ -56,7 +56,7 @@ export function mockGenerateAssessmentContent(assessment: Assessment): {
       id: uid("ars"),
       name: "Product knowledge",
       weight: 25,
-      descriptors: `Explains ${product} benefits clearly and accurately while acting as ${role}.`,
+      descriptors: `Explains ${product} benefits clearly and accurately as ${role}.`,
     },
     {
       id: uid("ars"),
@@ -70,10 +70,10 @@ export function mockGenerateAssessmentContent(assessment: Assessment): {
     name: assessment.persona.name || "Maya",
     style:
       assessment.persona.style ||
-      "Warm, probing AI interviewer who keeps the employee in the assessed role and never models the job for them",
+      "Warm, probing AI interviewer who presents workplace situations and assesses how the employee would handle them",
     voiceNotes:
       assessment.persona.voiceNotes ||
-      "Conversational English, brief turns, may quote a short customer line as a prompt, then waits for the employee to respond in role.",
+      "Conversational English, brief turns. CRITICAL: stay as assessor — never immersive customer chat.",
   };
 
   return { coreQuestions, rubricSkills, persona };

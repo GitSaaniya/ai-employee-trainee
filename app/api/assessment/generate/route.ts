@@ -111,8 +111,10 @@ export async function POST(request: Request) {
           roleContract: {
             employeePerforms: a.roleLabel || "the assessed job in the scenario",
             aiIs: "interviewer/assessor only — never performs the assessed job",
+            critical:
+              "Situational judgment assessment. Never immersive customer chat. Never ask what brings the employee to the aisle. Present situations and ask how they would handle them as the assessed role.",
             example:
-              "Shampoo mall scenario: employee = shopkeeper/sales associate; AI asks how they approach customers, discover needs, and sell — AI does not act as the shopkeeper.",
+              "Shampoo mall scenario: employee = shopkeeper/sales associate; AI asks how they would approach customers, discover needs, and sell — AI does not act as shopkeeper or shopper.",
           },
         }),
         temperature: 0.4,

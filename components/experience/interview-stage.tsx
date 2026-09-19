@@ -21,6 +21,7 @@ import { createTtsPlayer } from "@/lib/audio/tts-player";
 import { startSileroVad } from "@/lib/audio/silero-vad";
 import { evaluatePcmUtterance } from "@/lib/audio/stt-quality";
 import { encodeWavFromFloat32 } from "@/lib/audio/wav";
+import { ensureSituationalQuestion } from "@/lib/assessment/question-guard";
 import { cn, uid } from "@/lib/utils";
 
 export function InterviewStage({
@@ -90,7 +91,10 @@ export function InterviewStage({
   const liveFinalsRef = useRef<string[]>([]);
   const livePartialRef = useRef("");
 
-  const questions = assessment.coreQuestions;
+  const questions = assessment.coreQuestions.map((q) => ({
+    ...q,
+    text: ensureSituationalQuestion(q.text, assessment.roleLabel),
+  }));
   const totalQ = Math.max(questions.length, 1);
 
   const clearSilence = () => {
@@ -256,11 +260,14 @@ export function InterviewStage({
 
     let outcome: "ended" | "stopped" = "ended";
     try {
+      const ctrl = new AbortController();
+      const timeout = window.setTimeout(() => ctrl.abort(), 2200);
       const res = await fetch("/api/assessment/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
-      });
+        signal: ctrl.signal,
+      }).finally(() => window.clearTimeout(timeout));
       if (gen !== speakGenRef.current || finishingRef.current) return;
       const payload = await res.json();
       if (gen !== speakGenRef.current || finishingRef.current) return;
@@ -588,8 +595,12 @@ export function InterviewStage({
         streamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          await videoRef.current.play().catch(() => undefined);
+          void videoRef.current.play().catch(() => undefined);
         }
+
+        // Ready as soon as media works — do not block Start on Silero CDN download.
+        setEngineLabel("vad:loading");
+        setUiState("ready");
 
         const vad = await startSileroVad(
           stream,
@@ -645,7 +656,6 @@ export function InterviewStage({
         vadRef.current = vad;
         sileroReadyRef.current = vad.ready;
         setEngineLabel(vad.ready ? "vad:silero" : "vad:fallback");
-        setUiState("ready");
       } catch {
         setUiState("error");
         toast.error("Camera or microphone permission denied");
@@ -700,10 +710,8 @@ export function InterviewStage({
     }, 1000);
 
     const q0 = questions[0];
-    const roleBit = assessment.roleLabel?.trim()
-      ? ` You'll answer as the ${assessment.roleLabel.trim()} in this scenario — I'll assess how you handle it.`
-      : " You'll respond in the scenario role — I'll assess how you handle it.";
-    const opener = `Hi ${employeeName}, I'm ${agentName}.${roleBit} ${q0.text}`;
+    const role = assessment.roleLabel?.trim() || "your role";
+    const opener = `Hi ${employeeName}, I'm ${agentName}. I'll assess how you handle situations as ${role}. ${q0.text}`;
     await speakAi(opener);
   }
 
