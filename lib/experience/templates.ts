@@ -1,4 +1,5 @@
 import type { Assessment } from "@/lib/types";
+import { resolveAssessorVoice, type AgentGender, voicesForGender } from "@/lib/assessment/voices";
 
 export type ExperienceTemplate = {
   id: string;
@@ -32,7 +33,7 @@ export const EXPERIENCE_TEMPLATES: ExperienceTemplate[] = [
       "Front-line FMCG sales associates who need to open conversations, handle objections, and close without sounding pushy.",
     scenario:
       "A busy weekend afternoon in a mall beauty aisle. Shoppers are time-pressed. The associate must pitch a new shampoo SKU with a clear benefit story.",
-    personaName: "Maya",
+    personaName: "Ishita",
     personaStyle:
       "Warm, probing AI interviewer who presents mall-floor situations and assesses how the sales associate would handle them",
     productFocus: "shampoo",
@@ -50,7 +51,7 @@ export const EXPERIENCE_TEMPLATES: ExperienceTemplate[] = [
     goal: "Run a structured discovery-to-close sales call",
     learnerPersona: "Account executives who need sharper discovery and objection handling on live calls.",
     scenario: "A prospect joins a 10-minute discovery call with budget pressure and a competing vendor in mind.",
-    personaName: "Alex",
+    personaName: "Anand",
     personaStyle:
       "Direct AI interviewer who presents sales-call situations and scores judgment and communication",
     productFocus: "B2B solution",
@@ -67,7 +68,7 @@ export const EXPERIENCE_TEMPLATES: ExperienceTemplate[] = [
     goal: "Negotiate outcomes without damaging the relationship",
     learnerPersona: "Emerging managers negotiating scope, salary, or vendor terms.",
     scenario: "A counterpart pushes hard on price while you protect value and relationship.",
-    personaName: "Sam",
+    personaName: "Kabir",
     personaStyle:
       "Neutral AI interviewer who presents negotiation scenarios and assesses approach and composure",
     productFocus: "contract terms",
@@ -84,7 +85,7 @@ export const EXPERIENCE_TEMPLATES: ExperienceTemplate[] = [
     goal: "Deliver hard feedback while preserving trust",
     learnerPersona: "People managers who avoid conflict and need structured feedback skills.",
     scenario: "A direct report is underperforming on a visible deliverable and the conversation is overdue.",
-    personaName: "Jordan",
+    personaName: "Ishita",
     personaStyle:
       "Calm AI interviewer who presents difficult-conversation situations and assesses empathy and clarity",
     productFocus: "performance feedback",
@@ -101,7 +102,7 @@ export const EXPERIENCE_TEMPLATES: ExperienceTemplate[] = [
     goal: "Resolve complaints with empathy and clear next steps",
     learnerPersona: "Frontline agents handling escalated complaints.",
     scenario: "A customer arrives angry about a failed delivery and wants an immediate fix.",
-    personaName: "Riley",
+    personaName: "Rahul",
     personaStyle:
       "Steady AI interviewer who presents complaint scenarios and assesses de-escalation and resolution",
     productFocus: "service recovery",
@@ -133,6 +134,19 @@ export function applyTemplateToAssessment(
   template: ExperienceTemplate,
   roleId?: string
 ): Assessment {
+  const gender: AgentGender = /anand|aditya|kabir|rahul/i.test(template.personaName)
+    ? "male"
+    : "female";
+  const matchedVoice = voicesForGender(gender).find(
+    (v) => v.suggestedName.toLowerCase() === template.personaName.trim().toLowerCase()
+  );
+  const voice = resolveAssessorVoice({
+    gender,
+    voiceId: matchedVoice?.id ?? (gender === "male" ? "anand" : "ishita"),
+  });
+  // Prefer template name when it matches a curated voice; else suggested name
+  const name = template.personaName.trim() || voice.suggestedName;
+
   return {
     ...assessment,
     title: template.title,
@@ -150,10 +164,11 @@ export function applyTemplateToAssessment(
       locationType: template.locationType,
     },
     persona: {
-      name: template.personaName,
+      name,
+      gender,
+      voiceId: voice.id,
       style: template.personaStyle,
-      voiceNotes:
-        "Conversational English, short turns. CRITICAL: assess situational judgment — never immersive customer roleplay.",
+      voiceNotes: `Sarvam Bulbul v3 · ${voice.label}. CRITICAL: assess situational judgment — never immersive customer roleplay.`,
     },
   };
 }

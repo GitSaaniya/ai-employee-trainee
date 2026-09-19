@@ -1860,36 +1860,39 @@ export function createSeedData(): AppData {
         scenario:
           "A busy weekend afternoon in a mall beauty aisle. Shoppers are time-pressed. The associate must pitch a new shampoo SKU with a clear benefit story.",
         persona: {
-          name: "Maya",
-          style: "Warm but skeptical mall shopper who has limited time",
-          voiceNotes: "Conversational English, short turns, challenges vague pitches, rewards clear benefit language.",
+          name: "Ishita",
+          gender: "female",
+          voiceId: "ishita",
+          style:
+            "Warm, probing AI interviewer who presents mall-floor situations and assesses how the sales associate would handle them",
+          voiceNotes: "Sarvam Bulbul v3 · Ishita. Assess only — never immersive roleplay.",
         },
         durationMinutes: 5,
         coreQuestions: [
           {
             id: "aq_seed_1",
             order: 1,
-            text: "Walk me through how you would open a conversation with a busy shopper about shampoo on the mall floor.",
+            text: "A shopper pauses near shampoo on the mall floor. As the sales associate, how would you open the conversation?",
           },
           {
             id: "aq_seed_2",
             order: 2,
-            text: "What discovery questions would you ask to understand the shopper's hair-care needs before recommending anything?",
+            text: "As the sales associate, what discovery questions would you ask to understand the shopper's hair-care needs before recommending anything?",
           },
           {
             id: "aq_seed_3",
             order: 3,
-            text: 'The shopper says, "I\'m in a hurry and already have a brand I like." How do you handle that objection?',
+            text: 'A shopper says, "I\'m in a hurry and already have a brand I like." As the sales associate, how would you handle that objection?',
           },
           {
             id: "aq_seed_4",
             order: 4,
-            text: "How would you position the benefits of this shampoo in under 30 seconds without sounding scripted?",
+            text: "As the sales associate, how would you explain the benefits of this shampoo in under 30 seconds?",
           },
           {
             id: "aq_seed_5",
             order: 5,
-            text: "How do you close the interaction and set a clear next step if they are still undecided?",
+            text: "If the shopper is still undecided, how would you close or set a clear next step as the sales associate?",
           },
         ],
         rubricSkills: [

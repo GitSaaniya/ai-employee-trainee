@@ -43,6 +43,10 @@ export interface AssessmentPersona {
   name: string;
   style: string;
   voiceNotes: string;
+  /** Interviewer presentation + Sarvam voice selection */
+  gender?: "female" | "male";
+  /** Sarvam bulbul:v3 speaker id (lowercase) */
+  voiceId?: string;
 }
 
 export interface AssessmentAudienceMetadata {

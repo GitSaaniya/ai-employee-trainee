@@ -169,7 +169,11 @@ export default function AssessmentIntroPage() {
           <h2 className="mb-2 text-xl font-semibold text-white">
             Meet {assessment.persona.name || "your AI interviewer"}
           </h2>
-          <p className="text-sm leading-relaxed text-white/55">{assessment.persona.style}</p>
+          <p className="text-xs uppercase tracking-wider text-white/40">
+            {(assessment.persona.gender ?? "female") === "male" ? "Male" : "Female"} assessor
+            {assessment.persona.voiceId ? ` · voice ${assessment.persona.voiceId}` : ""}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-white/55">{assessment.persona.style}</p>
           <p className="mt-3 text-xs text-white/40">{assessment.persona.voiceNotes}</p>
         </div>
       </div>

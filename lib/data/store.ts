@@ -47,6 +47,42 @@ function migrateAppData(raw: AppData): AppData {
   };
 
   if (!Array.isArray(data.assessments)) data.assessments = seed.assessments;
+  for (const a of data.assessments) {
+    if (!a.persona) continue;
+    if (!a.persona.gender) {
+      // Prefer voiceId when present — don't let an old display name force male
+      if (a.persona.voiceId) {
+        const vid = a.persona.voiceId.toLowerCase();
+        a.persona.gender = /anand|aditya|kabir|rahul|shubh|amit|dev/.test(vid)
+          ? "male"
+          : "female";
+      } else {
+        a.persona.gender = /anand|aditya|kabir|rahul|shubh/i.test(a.persona.name)
+          ? "male"
+          : "female";
+      }
+    }
+    if (!a.persona.voiceId) {
+      a.persona.voiceId = a.persona.gender === "male" ? "rahul" : "ishita";
+    }
+    if (Array.isArray(a.coreQuestions)) {
+      // Lazy import avoided — keep migration light; rewrite known off-path phrasings
+      a.coreQuestions = a.coreQuestions.map((q) => {
+        const t = q.text || "";
+        if (
+          /while shopping|important to you|your decision on|what brings you|beauty aisle today/i.test(
+            t
+          )
+        ) {
+          return {
+            ...q,
+            text: `As the ${a.roleLabel || "sales associate"}, how would you discover what matters to this shopper before recommending a product?`,
+          };
+        }
+        return q;
+      });
+    }
+  }
   if (!Array.isArray(data.assessmentAssignments)) data.assessmentAssignments = seed.assessmentAssignments;
   if (!Array.isArray(data.assessmentSessions)) data.assessmentSessions = [];
   if (!Array.isArray(data.assessmentResults)) data.assessmentResults = [];
@@ -836,9 +872,19 @@ export function applyGeneratedAssessmentContent(
   const data = getData();
   const idx = data.assessments.findIndex((a) => a.id === assessmentId);
   if (idx < 0) throw new Error("Assessment not found");
+  const prev = data.assessments[idx];
+  const gender = prev.persona.gender ?? "female";
+  const voiceId = prev.persona.voiceId ?? (gender === "male" ? "anand" : "ishita");
   const saved: Assessment = {
-    ...data.assessments[idx],
-    ...content,
+    ...prev,
+    persona: {
+      ...content.persona,
+      gender,
+      voiceId,
+      name: prev.persona.name?.trim() || content.persona.name,
+    },
+    coreQuestions: content.coreQuestions,
+    rubricSkills: content.rubricSkills,
     status: "ready",
     authoringStep: "generate",
     updatedAt: new Date().toISOString(),

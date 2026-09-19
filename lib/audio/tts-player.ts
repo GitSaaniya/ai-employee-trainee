@@ -1,11 +1,36 @@
 import { stopSpeaking as stopBrowserTts } from "@/lib/assessment/mock-engine";
+import type { AgentGender } from "@/lib/assessment/voices";
 
 export type TtsPlayer = {
   playBase64Audio: (base64: string, mime?: string) => Promise<"ended" | "stopped">;
-  playBrowserSpeech: (text: string) => Promise<"ended" | "stopped">;
+  playBrowserSpeech: (
+    text: string,
+    opts?: { gender?: AgentGender }
+  ) => Promise<"ended" | "stopped">;
   stop: () => void;
   isPlaying: () => boolean;
 };
+
+function pickBrowserVoice(gender: AgentGender = "female"): SpeechSynthesisVoice | null {
+  if (typeof window === "undefined" || !window.speechSynthesis) return null;
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return null;
+
+  const preferFemale =
+    gender === "female"
+      ? /female|zira|samantha|susan|karen|moira|tessa|veena|neerja|heera|raveena|google uk english female|microsoft jenny|aria|sonia/i
+      : /male|david|mark|george|daniel|ravi|google uk english male|microsoft guy|andrew|brian/i;
+
+  const english = voices.filter((v) => /en(-|_|\b)/i.test(v.lang) || /english/i.test(v.name));
+  const pool = english.length ? english : voices;
+
+  return (
+    pool.find((v) => preferFemale.test(v.name)) ||
+    pool.find((v) => (gender === "female" ? /zira|samantha|jenny|aria/i.test(v.name) : /david|mark|guy/i.test(v.name))) ||
+    pool[0] ||
+    null
+  );
+}
 
 /** TTS player with barge-in stop that settles pending play promises. */
 export function createTtsPlayer(): TtsPlayer {
@@ -72,7 +97,7 @@ export function createTtsPlayer(): TtsPlayer {
           reject(err);
         }
       }),
-    playBrowserSpeech: (text: string) =>
+    playBrowserSpeech: (text: string, opts) =>
       new Promise<"ended" | "stopped">((resolve) => {
         if (settle) finish("stopped");
         if (typeof window === "undefined" || !window.speechSynthesis) {
@@ -81,12 +106,40 @@ export function createTtsPlayer(): TtsPlayer {
         }
         playing = true;
         window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.rate = 1.02;
-        settle = resolve;
-        utter.onend = () => finish("ended");
-        utter.onerror = () => finish("stopped");
-        window.speechSynthesis.speak(utter);
+
+        const speak = () => {
+          const utter = new SpeechSynthesisUtterance(text);
+          const voice = pickBrowserVoice(opts?.gender ?? "female");
+          if (voice) {
+            utter.voice = voice;
+            utter.lang = voice.lang || "en-IN";
+          } else {
+            utter.lang = "en-IN";
+          }
+          // Slightly slower + higher pitch reads less robotic on fallback voices
+          utter.rate = 0.95;
+          utter.pitch = opts?.gender === "male" ? 0.95 : 1.15;
+          settle = resolve;
+          utter.onend = () => finish("ended");
+          utter.onerror = () => finish("stopped");
+          window.speechSynthesis.speak(utter);
+        };
+
+        // Chrome often returns [] until voiceschanged fires
+        const existing = window.speechSynthesis.getVoices();
+        if (existing.length) {
+          speak();
+        } else {
+          const onVoices = () => {
+            window.speechSynthesis.removeEventListener("voiceschanged", onVoices);
+            speak();
+          };
+          window.speechSynthesis.addEventListener("voiceschanged", onVoices);
+          window.setTimeout(() => {
+            window.speechSynthesis.removeEventListener("voiceschanged", onVoices);
+            speak();
+          }, 400);
+        }
       }),
   };
 }

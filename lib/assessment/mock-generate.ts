@@ -67,13 +67,15 @@ export function mockGenerateAssessmentContent(assessment: Assessment): {
   ];
 
   const persona = {
-    name: assessment.persona.name || "Maya",
+    name: assessment.persona.name || "Ishita",
+    gender: assessment.persona.gender ?? "female",
+    voiceId: assessment.persona.voiceId || "ishita",
     style:
       assessment.persona.style ||
       "Warm, probing AI interviewer who presents workplace situations and assesses how the employee would handle them",
     voiceNotes:
       assessment.persona.voiceNotes ||
-      "Conversational English, brief turns. CRITICAL: stay as assessor — never immersive customer chat.",
+      "Sarvam Bulbul v3 · Ishita. CRITICAL: stay as assessor — never immersive customer chat.",
   };
 
   return { coreQuestions, rubricSkills, persona };
@@ -98,7 +100,9 @@ export function createBlankAssessment(organisationId: string, templateId?: strin
     learnerPersona: "",
     scenario: "",
     persona: {
-      name: "",
+      name: "Ishita",
+      gender: "female",
+      voiceId: "ishita",
       style: "",
       voiceNotes: "",
     },

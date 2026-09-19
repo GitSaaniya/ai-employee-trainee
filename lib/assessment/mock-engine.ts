@@ -10,8 +10,8 @@ const MOCK_ANSWERS = [
 ];
 
 const FOLLOW_UP_QUESTIONS = [
-  "Can you be more specific—what exactly would you say in the first five seconds?",
-  "What's one question you would avoid asking in that moment, and why?",
+  "Can you get more specific — what would you say in the first five seconds?",
+  "What's one question you'd avoid asking there, and why?",
 ];
 
 export function mockUserAnswerForQuestion(questionIndex: number): string {

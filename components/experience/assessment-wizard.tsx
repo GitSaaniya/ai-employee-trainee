@@ -16,6 +16,11 @@ import {
   publishAssessment,
   saveAssessment,
 } from "@/lib/data/store";
+import {
+  applyGenderToPersona,
+  type AgentGender,
+  voicesForGender,
+} from "@/lib/assessment/voices";
 import { cn } from "@/lib/utils";
 
 const fieldClass =
@@ -427,10 +432,66 @@ export function AssessmentAuthoringWizard({
                     Describe your AI Persona
                   </h1>
                   <p className="text-sm text-white/50">
-                    Configure the AI interviewer/assessor. Keep this as an assessor persona — not the shopkeeper or
-                    job being assessed. The employee performs that role; the AI asks how they would handle it.
+                    Choose gender and voice for the AI interviewer. Name follows the selected voice. The
+                    assessor evaluates how employees handle situations — it does not play their job.
                   </p>
                   <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <Label className={labelClass}>Agent gender</Label>
+                      <div className="mt-2 flex gap-2">
+                        {(["female", "male"] as AgentGender[]).map((g) => (
+                          <button
+                            key={g}
+                            type="button"
+                            className={cn(
+                              "flex-1 rounded-lg border px-3 py-2 text-sm capitalize transition-colors",
+                              (assessment.persona.gender ?? "female") === g
+                                ? "border-[#00E5FF]/50 bg-[#00E5FF]/10 text-white"
+                                : "border-white/10 bg-[#0d1219] text-white/60 hover:border-white/25"
+                            )}
+                            onClick={() =>
+                              patch({
+                                persona: applyGenderToPersona(g, assessment.persona),
+                              })
+                            }
+                          >
+                            {g}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <Label className={labelClass}>Sarvam voice</Label>
+                      <select
+                        className={cn("mt-2 flex h-9 w-full rounded-md border px-3 text-sm", fieldClass)}
+                        value={
+                          assessment.persona.voiceId ||
+                          (assessment.persona.gender === "male" ? "anand" : "ishita")
+                        }
+                        onChange={(e) => {
+                          const gender = (assessment.persona.gender ?? "female") as AgentGender;
+                          const option = voicesForGender(gender).find((v) => v.id === e.target.value);
+                          if (!option) return;
+                          patch({
+                            persona: {
+                              ...assessment.persona,
+                              gender,
+                              voiceId: option.id,
+                              name: option.suggestedName,
+                              voiceNotes: `Sarvam Bulbul v3 · ${option.label}. CRITICAL: assess only — never immersive roleplay.`,
+                            },
+                          });
+                        }}
+                      >
+                        {voicesForGender((assessment.persona.gender ?? "female") as AgentGender).map(
+                          (v) => (
+                            <option key={v.id} value={v.id}>
+                              {v.label} — {v.blurb}
+                            </option>
+                          )
+                        )}
+                      </select>
+                    </div>
                     <div>
                       <Label className={labelClass}>Persona name</Label>
                       <Input
@@ -440,6 +501,9 @@ export function AssessmentAuthoringWizard({
                           patch({ persona: { ...assessment.persona, name: e.target.value } })
                         }
                       />
+                      <p className="mt-1 text-xs text-white/35">
+                        Auto-set from voice; you can override the display name.
+                      </p>
                     </div>
                     <div className="sm:col-span-2">
                       <Label className={labelClass}>Persona style</Label>
