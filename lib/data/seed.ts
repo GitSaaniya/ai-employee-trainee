@@ -1865,7 +1865,7 @@ export function createSeedData(): AppData {
           voiceId: "ishita",
           style:
             "Warm, probing AI interviewer who presents mall-floor situations and assesses how the sales associate would handle them",
-          voiceNotes: "Sarvam Bulbul v3 · Ishita. Assess only — never immersive roleplay.",
+          voiceNotes: "Ishita. Assess only — never immersive roleplay.",
         },
         durationMinutes: 5,
         coreQuestions: [

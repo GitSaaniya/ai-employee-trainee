@@ -168,7 +168,7 @@ export function applyTemplateToAssessment(
       gender,
       voiceId: voice.id,
       style: template.personaStyle,
-      voiceNotes: `Sarvam Bulbul v3 · ${voice.label}. CRITICAL: assess situational judgment — never immersive customer roleplay.`,
+      voiceNotes: `${voice.label}. CRITICAL: assess situational judgment — never immersive customer roleplay.`,
     },
   };
 }

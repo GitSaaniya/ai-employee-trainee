@@ -75,7 +75,7 @@ export function mockGenerateAssessmentContent(assessment: Assessment): {
       "Warm, probing AI interviewer who presents workplace situations and assesses how the employee would handle them",
     voiceNotes:
       assessment.persona.voiceNotes ||
-      "Sarvam Bulbul v3 · Ishita. CRITICAL: stay as assessor — never immersive customer chat.",
+      "Ishita. CRITICAL: stay as assessor — never immersive customer chat.",
   };
 
   return { coreQuestions, rubricSkills, persona };

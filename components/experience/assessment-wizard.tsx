@@ -126,8 +126,8 @@ export function AssessmentAuthoringWizard({
         rubricSkills: payload.rubricSkills,
       });
       setAssessment(saved);
-      if (payload.warning) toast.message(payload.warning);
-      else toast.success(payload.source === "groq" ? "Generated with Groq" : "Generated with Demo AI");
+      if (payload.warning) toast.message("Generated with a fallback");
+      else toast.success("Assessment generated");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Generation failed");
       persist({ ...assessment, status: "draft", authoringStep: "generate" });
@@ -461,7 +461,7 @@ export function AssessmentAuthoringWizard({
                       </div>
                     </div>
                     <div>
-                      <Label className={labelClass}>Sarvam voice</Label>
+                      <Label className={labelClass}>Assessor voice</Label>
                       <select
                         className={cn("mt-2 flex h-9 w-full rounded-md border px-3 text-sm", fieldClass)}
                         value={
@@ -478,7 +478,7 @@ export function AssessmentAuthoringWizard({
                               gender,
                               voiceId: option.id,
                               name: option.suggestedName,
-                              voiceNotes: `Sarvam Bulbul v3 · ${option.label}. CRITICAL: assess only — never immersive roleplay.`,
+                              voiceNotes: `${option.label}. CRITICAL: assess only — never immersive roleplay.`,
                             },
                           });
                         }}
@@ -578,7 +578,7 @@ export function AssessmentAuthoringWizard({
                   Generate
                 </h1>
                 <p className="mt-1 text-sm text-white/50">
-                  Demo AI / Groq authors core questions and scoring rubrics from your brief.
+                  AI authors core questions and scoring rubrics from your brief.
                 </p>
               </div>
 

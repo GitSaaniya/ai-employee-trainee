@@ -139,6 +139,6 @@ export function applyGenderToPersona(
     style:
       current.style?.trim() ||
       `Professional ${gender} AI interviewer who presents workplace situations and assesses judgment without coaching`,
-    voiceNotes: `Sarvam Bulbul v3 · ${voice.label}. CRITICAL: assess only — never immersive roleplay.`,
+    voiceNotes: `${voice.label}. CRITICAL: assess only — never immersive roleplay.`,
   };
 }

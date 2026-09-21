@@ -174,7 +174,6 @@ export default function AssessmentIntroPage() {
             {assessment.persona.voiceId ? ` · voice ${assessment.persona.voiceId}` : ""}
           </p>
           <p className="mt-2 text-sm leading-relaxed text-white/55">{assessment.persona.style}</p>
-          <p className="mt-3 text-xs text-white/40">{assessment.persona.voiceNotes}</p>
         </div>
       </div>
 

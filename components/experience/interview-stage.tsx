@@ -217,7 +217,7 @@ export function InterviewStage({
         },
         onStatus: (status) => {
           setLiveSttReady(status === "live");
-          if (status === "live") setEngineLabel("stt:gladia-live");
+          if (status === "live") setEngineLabel("stt:live");
         },
         onError: () => {
           setLiveSttReady(false);
@@ -284,7 +284,7 @@ export function InterviewStage({
       const warmed = warmedAudioRef.current;
       if (warmed && warmed.text === safeText) {
         warmedAudioRef.current = null;
-        setEngineLabel(`tts:sarvam-warm`);
+        setEngineLabel(`tts:warm`);
         outcome = await ttsRef.current.playBase64Audio(warmed.base64, warmed.mime);
       } else {
         const ctrl = new AbortController();
@@ -303,13 +303,15 @@ export function InterviewStage({
         const payload = await res.json();
         if (gen !== speakGenRef.current || finishingRef.current) return;
         if (payload.audioBase64) {
-          setEngineLabel(`tts:${payload.source}:${payload.speaker || voice.id}`);
+          const ttsSource =
+            payload.source === "sarvam" ? "neural" : payload.source === "browser" ? "browser" : "remote";
+          setEngineLabel(`tts:${ttsSource}:${payload.speaker || voice.id}`);
           outcome = await ttsRef.current.playBase64Audio(
             payload.audioBase64,
             payload.mimeType || "audio/wav"
           );
         } else {
-          if (payload.warning) toast.message(`Voice fallback · ${payload.warning.slice(0, 80)}`);
+          if (payload.warning) toast.message("Voice fallback — using browser speech");
           setEngineLabel(`tts:browser:${agentGender}`);
           outcome = await ttsRef.current.playBrowserSpeech(safeText, { gender: agentGender });
         }
@@ -442,10 +444,10 @@ export function InterviewStage({
         const payload = await res.json();
         if (res.ok && payload.result) {
           result = payload.result as AssessmentResult;
-          if (payload.warning) toast.message(payload.warning);
+          if (payload.warning) toast.message("Scoring used a fallback");
         }
       } catch {
-        toast.message("Scoring fell back to Demo AI");
+        toast.message("Scoring used a fallback");
       }
 
       completeAssessmentSession(sessionIdRef.current, result);
@@ -472,7 +474,7 @@ export function InterviewStage({
       liveFinalsRef.current = [];
       livePartialRef.current = "";
       if (liveJoined) {
-        setEngineLabel("stt:gladia-live");
+        setEngineLabel("stt:live");
         return liveJoined;
       }
 
@@ -485,12 +487,14 @@ export function InterviewStage({
       try {
         const res = await fetch("/api/assessment/stt", { method: "POST", body: form });
         const payload = await res.json();
-        setEngineLabel(`stt:${payload.source ?? "unknown"}`);
+        setEngineLabel(
+          `stt:${payload.source === "gladia" ? "live" : payload.source === "demo_ai" ? "demo" : "remote"}`
+        );
         if (payload.rejected || !payload.text?.trim()) {
-          toast.message(payload.warning || "Couldn’t catch that — please speak again");
+          toast.message("Couldn’t catch that — please speak again");
           return null;
         }
-        if (payload.warning) toast.message(payload.warning);
+        if (payload.warning) toast.message("Speech recognition used a fallback");
         return payload.text.trim() as string;
       } catch {
         toast.message("Speech recognition failed — please try again");
@@ -800,7 +804,7 @@ export function InterviewStage({
         if (vadResult) {
           vadRef.current = vadResult;
           sileroReadyRef.current = vadResult.ready;
-          setEngineLabel(vadResult.ready ? "vad:silero" : "vad:fallback");
+          setEngineLabel(vadResult.ready ? "vad:ml" : "vad:fallback");
         } else {
           sileroReadyRef.current = false;
           setEngineLabel("vad:fallback");
@@ -1037,8 +1041,7 @@ export function InterviewStage({
           </Button>
         </div>
         <p className="text-xs text-white/40">
-          Silero → Gladia → Groq → Sarvam when keys are set. Headphones recommended. Alt+D audio debug.
-          Toggle captions for AI speech accessibility.
+          Headphones recommended. Alt+D audio debug. Toggle captions for AI speech accessibility.
         </p>
       </div>
 

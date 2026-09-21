@@ -97,3 +97,123 @@ function fallbackAssessorQuestion(role: string, original: string): string {
   }
   return `In that moment as ${role}, what would you do next to understand the shopper's needs?`;
 }
+
+const STOPWORDS = new Set([
+  "a",
+  "an",
+  "the",
+  "and",
+  "or",
+  "to",
+  "of",
+  "in",
+  "on",
+  "for",
+  "as",
+  "you",
+  "your",
+  "would",
+  "what",
+  "how",
+  "when",
+  "which",
+  "that",
+  "this",
+  "they",
+  "them",
+  "their",
+  "with",
+  "about",
+  "okay",
+  "alright",
+  "got",
+  "it",
+  "thanks",
+  "thank",
+  "yes",
+  "no",
+  "if",
+  "do",
+  "does",
+  "did",
+  "are",
+  "is",
+  "be",
+  "been",
+  "was",
+  "were",
+  "can",
+  "could",
+  "should",
+  "will",
+  "just",
+  "any",
+  "some",
+  "more",
+  "into",
+  "from",
+  "by",
+  "at",
+  "so",
+  "then",
+  "than",
+  "also",
+  "very",
+  "really",
+]);
+
+/** Strip acknowledgements / filler so question bodies can be compared. */
+export function normalizeAssessorQuestion(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(
+      /^(okay|alright|got it|thanks|thank you|understood|sure|right)[.,!]?\s*/i,
+      ""
+    )
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function significantTokens(text: string): Set<string> {
+  const tokens = normalizeAssessorQuestion(text)
+    .split(" ")
+    .filter((w) => w.length > 2 && !STOPWORDS.has(w));
+  return new Set(tokens);
+}
+
+/** Overlap ratio against the smaller token set (0–1). High = near paraphrase. */
+export function questionSimilarity(a: string, b: string): number {
+  const ta = significantTokens(a);
+  const tb = significantTokens(b);
+  if (!ta.size || !tb.size) return 0;
+  let inter = 0;
+  for (const w of ta) if (tb.has(w)) inter++;
+  return inter / Math.min(ta.size, tb.size);
+}
+
+export function isNearDuplicateQuestion(
+  candidate: string,
+  priorQuestions: string[],
+  threshold = 0.72
+): boolean {
+  const c = candidate.trim();
+  if (!c) return false;
+  return priorQuestions.some((p) => p.trim() && questionSimilarity(c, p) >= threshold);
+}
+
+/** Dig into what they just said — never restates the prior question. */
+export function digInFollowUpFromAnswer(lastUserAnswer: string, roleLabel: string): string {
+  const role = roleLabel.trim() || "the assessed role";
+  const answer = lastUserAnswer.trim();
+  const snippet = answer
+    .replace(/\s+/g, " ")
+    .slice(0, 90)
+    .replace(/[,;].*$/, "")
+    .trim();
+
+  if (snippet.length >= 12) {
+    return `Got it — you mentioned ${snippet.toLowerCase()}. Walk me through the exact first question you'd ask next.`;
+  }
+  return `Got it. As ${role}, give me the exact first question you'd ask in that moment — word for word.`;
+}

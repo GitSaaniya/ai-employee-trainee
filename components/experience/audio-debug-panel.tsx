@@ -27,7 +27,7 @@ export function AudioDebugPanel({
     >
       <div className="mb-1 font-semibold tracking-wide text-amber-200 uppercase">Audio debug</div>
       <div>RMS dB: {rmsDb.toFixed(1)}</div>
-      <div>Silero VAD speech: {vadSpeech ? "yes" : "no"}</div>
+      <div>VAD speech: {vadSpeech ? "yes" : "no"}</div>
       <div>Smart turn: {smartTurn}</div>
       <div>Engine: {engine}</div>
     </div>

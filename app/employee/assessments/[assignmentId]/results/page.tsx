@@ -136,9 +136,6 @@ export default function AssessmentResultsPage() {
               <Link href="/employee/assessments">Back to assessments</Link>
             </Button>
           </div>
-          <p className="mt-4 text-[11px] text-white/35">
-            Scored by {result.scoredBy === "groq" ? "Groq" : "Demo AI"}
-          </p>
         </div>
       </div>
     </GenieShell>
